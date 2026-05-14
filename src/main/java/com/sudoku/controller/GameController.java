@@ -15,7 +15,7 @@ public class GameController {
     @MessageMapping("/move")
     @SendTo("/topic/game")
     public Map<String,Object> move(
-            Map<String,Object> data
+           Map<String,Object> data
     ){
         return data;
     }

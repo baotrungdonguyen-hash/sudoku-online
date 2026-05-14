@@ -13,7 +13,7 @@ public class MoveRequest {
         return row;
     }
 
-    public void setRow(int row) {
+    public void setRow (int row) {
         this.row = row;
     }
 

@@ -4,6 +4,6 @@ import java.util.*;
 
 public class RoomManager {
 
-    public static Map<String, List<String>> rooms = new HashMap<>();
+    public static Map<String,List<String>> rooms = new HashMap<>();
 
 }

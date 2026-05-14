@@ -34,7 +34,7 @@ public class MoveResponse {
         return col;
     }
 
-    public void setCol(int col) {
+    public void setCol (int col) {
         this.col = col;
     }
 
