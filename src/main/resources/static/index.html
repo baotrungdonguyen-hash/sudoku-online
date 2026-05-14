@@ -919,7 +919,7 @@ function connectOnline(){
         new SockJS('/ws');
 
     stompClient =
-        Stomp.over(socket);
+        Stomp.over(socket) ;
 
     stompClient.connect({},()=>{
 
