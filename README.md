@@ -1,34 +1,33 @@
 # Sudoku Online Multiplayer
 
-## Thành viên
+## Sinh viên thực hiện
 Nguyễn Trung
 
-## Công nghệ
+## Công nghệ sử dụng
 - Java Spring Boot
 - WebSocket
 - HTML
 - CSS
 - JavaScript
-- MySQL
+- Maven
 
 ## Chức năng
-
-- Sudoku nhiều độ khó
-- Hint
+- Chơi Sudoku
+- Chọn độ khó
 - Notes
+- Hint
 - Erase
+- Highlight số giống nhau
 - Leaderboard
 - Multiplayer Online
-- Đồng bộ thời gian thực
 - Tạo phòng
 - Tham gia phòng
-- Người chơi thắng khi giải xong trước
+- Đồng bộ thời gian thực
+- Người chiến thắng là người giải xong trước
 
 ## Cách chạy
 
-1. Import Maven Project
-2. Update Maven
-3. Run SudokuApplication
-4. Truy cập:
+1. Clone project
 
-http://localhost:8082
+```bash
+git clone https://github.com/baotrungdonguyen-hash/sudoku-online.git
