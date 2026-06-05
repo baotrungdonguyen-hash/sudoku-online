@@ -1,1 +1,1 @@
-package com.sudoku.config;
+fpackage com.sudoku.config;

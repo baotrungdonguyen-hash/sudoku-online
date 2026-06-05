@@ -4,16 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sudoku Battle Online</title>
-
-<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+<title>Sudoku Online</title>
 
 <style>
 
 body{
     margin:0;
-    background:#f3f3f3;
+    background:#f4f4f4;
     font-family:Arial;
     display:flex;
     justify-content:center;
@@ -21,99 +18,176 @@ body{
 
 .container{
     width:100%;
-    max-width:520px;
-    min-height:100vh;
-    background:#f6f6f6;
+    max-width:1400px;
+    padding:20px;
 }
-
-/* TOP */
 
 .topbar{
-    background:#d7f0ef;
-    padding:18px;
     display:flex;
     justify-content:space-between;
     align-items:center;
+    margin-bottom:20px;
+    flex-wrap:wrap;
 }
 
-.logo{
-    font-size:32px;
-    font-weight:bold;
+h1{
     color:#00897b;
 }
-
-.top-buttons{
-    display:flex;
-    gap:12px;
-}
-
-.circle-btn{
-    width:58px;
-    height:58px;
-    border:none;
-    border-radius:50%;
-    background:#42a5f5;
-    color:white;
-    font-size:25px;
-    cursor:pointer;
-}
-
-/* INFO */
 
 .info{
-    padding:15px 25px;
     display:flex;
-    justify-content:space-between;
+    gap:20px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+/* ONLINE */
+
+.online-top{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-bottom:20px;
+
+    flex-wrap:wrap;
+}
+
+.player-input{
+
+    padding:12px;
+
+    border-radius:10px;
+
+    border:1px solid #ccc;
+
+    font-size:16px;
+
+    flex:1;
+}
+
+.online-btn{
+
+    background:#22c55e;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 16px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:15px;
+}
+
+.join{
+
+    background:#3b82f6;
+}
+
+#onlineStatus{
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+/* LAYOUT */
+
+.game-layout{
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+}
+
+/* DIFFICULTY */
+
+.difficulty-bar{
+
+    margin-bottom:20px;
+
+    display:flex;
     align-items:center;
-}
+    gap:10px;
 
-.difficulty{
-    font-size:28px;
-    color:#00897b;
+    font-size:20px;
     font-weight:bold;
 }
 
-.timer{
-    font-size:30px;
-    color:#e91e63;
-    font-weight:bold;
+#gameDifficulty{
+
+    padding:10px;
+
+    border-radius:10px;
+
+    border:none;
+
+    background:#00897b;
+
+    color:white;
+
+    font-size:16px;
 }
 
 /* BOARD */
 
 .board{
-    width:450px;
-    height:450px;
-    margin:auto;
+
+    width:540px;
+    height:540px;
+
     display:grid;
+
     grid-template-columns:repeat(9,1fr);
+    grid-template-rows:repeat(9,1fr);
+
     border:4px solid #00897b;
+
     background:white;
 }
 
 .cell{
-    border:1px solid #7bcac4;
+
     position:relative;
+
+    border-right:1px solid #7bcac4;
+    border-bottom:1px solid #7bcac4;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    overflow:hidden;
 }
 
 .cell input{
+
     width:100%;
     height:100%;
+
     border:none;
+
     outline:none;
+
     text-align:center;
+
     font-size:34px;
+
     font-weight:bold;
+
+    position:relative;
+
+    z-index:2;
+
     background:white;
+
+    cursor:pointer;
 }
 
 .fixed{
-    background:#e6f3f3 !important;
-    color:black;
-}
-
-.same{
-    background:#b2ebf2 !important;
+    background:#dff3f1;
 }
 
 .correct{
@@ -124,49 +198,75 @@ body{
     background:#ffb3b3 !important;
 }
 
+.same{
+
+    background:#80deea !important;
+
+    color:#000 !important;
+
+    transition:0.2s;
+}
+
 /* NOTES */
 
 .note-grid{
+
     position:absolute;
+
     inset:0;
+
     display:grid;
+
     grid-template-columns:repeat(3,1fr);
+
     grid-template-rows:repeat(3,1fr);
-    font-size:10px;
-    color:#666;
+
     pointer-events:none;
+
+    z-index:3;
 }
 
 .note{
+
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
+    font-size:11px;
+
+    color:#666;
+
+    font-weight:bold;
 }
 
-/* ACTIONS */
+/* CONTROLS */
 
-.actions{
+.controls{
+    margin-top:20px;
     display:flex;
-    justify-content:space-around;
-    margin-top:25px;
+    gap:10px;
+    flex-wrap:wrap;
 }
 
-.action-btn{
-    width:90px;
-    height:90px;
+button{
+
+    padding:12px 18px;
+
     border:none;
-    border-radius:24px;
-    color:white;
-    font-size:18px;
+
+    border-radius:10px;
+
     cursor:pointer;
+
+    color:white;
+
+    font-size:16px;
 }
 
-.undo{
-    background:#7e57c2;
-}
-
-.erase{
-    background:#e91e63;
+.newgame{
+    background:#22c55e;
 }
 
 .note-btn{
@@ -174,34 +274,23 @@ body{
 }
 
 .hint{
-    background:#7e57c2;
-    position:relative;
+    background:#3b82f6;
 }
 
-.hint-badge{
-    position:absolute;
-    top:-8px;
-    right:-8px;
-    background:#ff9800;
-    color:white;
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:16px;
-    font-weight:bold;
+.erase{
+    background:#ef4444;
 }
 
 /* NUMBER PANEL */
 
 .number-panel{
-    margin-top:30px;
+
+    margin-top:20px;
+
     display:grid;
     grid-template-columns:repeat(9,1fr);
+
     text-align:center;
-    padding:0 10px 30px;
 }
 
 .number-btn{
@@ -209,167 +298,195 @@ body{
 }
 
 .number{
-    font-size:58px;
+    font-size:40px;
     color:#00897b;
     font-weight:bold;
 }
 
 .remaining{
-    font-size:22px;
-}
-
-/* ONLINE */
-
-.online-panel{
-    margin:20px;
-    background:white;
-    border-radius:18px;
-    padding:15px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
-}
-
-.online-title{
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:10px;
-}
-
-.online-buttons{
-    display:flex;
-    gap:10px;
-}
-
-.online-buttons button{
-    flex:1;
-    border:none;
-    padding:12px;
-    border-radius:12px;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-}
-
-.find{
-    background:#22c55e;
-}
-
-.create{
-    background:#3b82f6;
+    font-size:18px;
 }
 
 /* LEADERBOARD */
 
-.leaderboard{
-    margin:20px;
-    background:white;
-    border-radius:18px;
-    padding:15px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+.leaderboard-container{
+
+    width:400px;
+
+    background:#1e1e1e;
+
+    color:white;
+
+    padding:20px;
+
+    border-radius:15px;
 }
 
-.rank-title{
-    font-size:24px;
-    font-weight:bold;
-    margin-bottom:15px;
+.leaderboard-container h2{
+    margin-top:0;
 }
 
-.rank-item{
-    display:flex;
-    justify-content:space-between;
-    padding:10px 0;
-    border-bottom:1px solid #ddd;
-}
+.leaderboard-container table{
 
-.rank-name{
-    font-weight:bold;
-}
-
-.rank-score{
-    color:#22c55e;
-    font-weight:bold;
-}
-
-.room-input{
     width:100%;
-    padding:12px;
-    margin-bottom:10px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:16px;
-    box-sizing:border-box;
+
+    border-collapse:collapse;
+
+    margin-top:15px;
+}
+
+.leaderboard-container th,
+.leaderboard-container td{
+
+    border:1px solid gray;
+
+    padding:10px;
+
+    text-align:center;
+}
+
+.leaderboard-container tr:nth-child(even){
+
+    background:#2c2c2c;
+}
+
+.note-active{
+
+    background:#a855f7 !important;
 }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </head>
 
 <body>
 
 <div class="container">
 
-<!-- TOP -->
-
 <div class="topbar">
 
-<div class="logo">
-Sudoku
-</div>
-
-<div class="top-buttons">
-
-<button class="circle-btn">⚙</button>
-<button class="circle-btn">⏸</button>
-<button class="circle-btn">🏆</button>
-
-</div>
-
-</div>
-
-<!-- INFO -->
+<h1>Sudoku Online</h1>
 
 <div class="info">
 
-<div class="difficulty">
-Expert
+<div>
+⏱ <span id="timer">00:00</span>
 </div>
 
-<div class="timer" id="timer">
-00:00
+<div>
+❌ <span id="mistakes">0</span>/3
+</div>
+
+<div>
+💡 <span id="hintCount">3</span>
 </div>
 
 </div>
+
+</div>
+
+<!-- ONLINE -->
+
+<div class="online-top">
+
+<input
+id="playerName"
+class="player-input"
+placeholder="Tên người chơi"
+/>
+
+<input
+id="roomCode"
+class="player-input"
+placeholder="Mã phòng"
+/>
+
+<button
+class="online-btn"
+onclick="createRoom()">
+
+Tạo phòng
+
+</button>
+
+<button
+class="online-btn join"
+onclick="joinRoom()">
+
+Tham gia
+
+</button>
+
+</div>
+
+<p id="onlineStatus">
+🔴 Offline
+</p>
+
+<!-- DIFFICULTY -->
+
+<div class="difficulty-bar">
+
+<label>
+Độ khó:
+</label>
+
+<select id="gameDifficulty">
+
+<option value="easy">
+Dễ
+</option>
+
+<option value="medium">
+Bình thường
+</option>
+
+<option value="hard">
+Khó
+</option>
+
+<option value="expert">
+Chuyên gia
+</option>
+
+</select>
+
+</div>
+
+<div class="game-layout">
+
+<div>
 
 <!-- BOARD -->
 
 <div id="board" class="board"></div>
 
-<!-- ACTIONS -->
+<!-- CONTROLS -->
 
-<div class="actions">
+<div class="controls">
 
-<button class="action-btn undo">
-↩<br>Undo
+<button class="newgame"
+onclick="newGame()">
+New Game
 </button>
 
-<button class="action-btn erase"
-onclick="eraseCell()">
-⌫<br>Erase
-</button>
-
-<button class="action-btn note-btn"
+<button
+id="noteButton"
+class="note-btn"
 onclick="toggleNoteMode()">
-✏<br>Pencil
+Notes
 </button>
 
-<button class="action-btn hint"
+<button class="hint"
 onclick="useHint()">
+Hint
+</button>
 
-💡<br>Hint
-
-<div class="hint-badge"
-id="hintCount">
-3
-</div>
-
+<button class="erase"
+onclick="eraseCell()">
+Erase
 </button>
 
 </div>
@@ -380,61 +497,33 @@ id="hintCount">
 class="number-panel">
 </div>
 
-<!-- ONLINE -->
-
-<div class="online-panel">
-
-<div class="online-title">
-🌍 Online Battle
-</div>
-
-<input
-id="roomInput"
-class="room-input"
-placeholder="Nhập mã phòng"
-/>
-
-<div class="online-buttons">
-
-<button class="find"
-onclick="findMatch()">
-Tìm đối thủ
-</button>
-
-<button class="create"
-onclick="createRoom()">
-Tạo phòng
-</button>
-
-</div>
-
-<p id="onlineStatus">
-Chưa kết nối
-</p>
-
 </div>
 
 <!-- LEADERBOARD -->
 
-<div class="leaderboard">
+<div class="leaderboard-container">
 
-<div class="rank-title">
-🏆 Bảng Xếp Hạng
-</div>
+<h2>🏆 Leaderboard</h2>
 
-<div class="rank-item">
-<div class="rank-name">NguyenVanA</div>
-<div class="rank-score">1200</div>
-</div>
+<table>
 
-<div class="rank-item">
-<div class="rank-name">Player123</div>
-<div class="rank-score">1150</div>
-</div>
+<thead>
 
-<div class="rank-item">
-<div class="rank-name">SudokuKing</div>
-<div class="rank-score">1090</div>
+<tr>
+<th>Hạng</th>
+<th>Tên</th>
+<th>Thời gian</th>
+<th>Độ khó</th>
+</tr>
+
+</thead>
+
+<tbody id="leaderboardBody">
+
+</tbody>
+
+</table>
+
 </div>
 
 </div>
@@ -443,27 +532,113 @@ Chưa kết nối
 
 <script>
 
-let stompClient = null;
+let selectedCell=null;
 
-let selectedCell = null;
+let hints=3;
 
-let hints = 3;
+let noteMode=false;
 
-let noteMode = false;
+let stompClient=null;
 
-let mistakes = 0;
+let currentPlayer="";
 
-let seconds = 0;
+let currentRoom="";
+
+let gameFinished=false;
+/* SOCKET */
+function connectSocket(){
+
+    const socket=
+    new SockJS(
+        'http://localhost:8082/ws'
+    );
+
+    stompClient=
+    Stomp.over(socket);
+
+    stompClient.connect({},()=>{
+
+        console.log(
+            'Connected'
+        );
+
+        document.getElementById(
+            'onlineStatus'
+        ).innerText='🟢 Online';
+
+        subscribeRoom();
+
+    });
+
+}
+function updateOpponentMove(move){
+
+    if(
+        move.player
+        ===
+        currentPlayer
+    ){
+
+        return;
+    }
+
+    console.log(
+        'Opponent move',
+        move
+    );
+
+}
+function sendMove(
+    row,
+    col,
+    value
+){
+
+    if(!stompClient){
+
+        return;
+    }
+
+    stompClient.send(
+
+        '/app/move',
+
+        {},
+
+        JSON.stringify({
+
+            roomId:currentRoom,
+
+            row:row,
+
+            col:col,
+
+            value:value,
+
+            player:currentPlayer
+
+        })
+
+    );
+
+}
+let mistakes=0;
+
+let seconds=0;
 
 let timerInterval;
 
-let solution = [];
+let solution=[];
 
-let puzzle = [];
+let puzzle=[];
 
-let notes = {};
+let currentDifficulty="easy";
 
-let currentRoom = "";
+let socket=null;
+
+let roomId=null;
+
+let notes={};
 
 /* TIMER */
 
@@ -471,19 +646,20 @@ function startTimer(){
 
     clearInterval(timerInterval);
 
-    seconds = 0;
+    seconds=0;
 
-    timerInterval = setInterval(()=>{
+    timerInterval=setInterval(()=>{
 
         seconds++;
 
-        const min = Math.floor(seconds/60);
+        const min=Math.floor(seconds/60);
 
-        const sec = seconds%60;
+        const sec=seconds%60;
 
-        document.getElementById("timer").innerText =
+        document.getElementById("timer").innerText=
             String(min).padStart(2,'0')
-            + ":" +
+            +":"
+            +
             String(sec).padStart(2,'0');
 
     },1000);
@@ -498,7 +674,8 @@ function shuffle(array){
 
         let j=Math.floor(Math.random()*(i+1));
 
-        [array[i],array[j]]=[array[j],array[i]];
+        [array[i],array[j]]=
+        [array[j],array[i]];
     }
 
     return array;
@@ -508,7 +685,7 @@ function shuffle(array){
 
 function generateSolvedBoard(){
 
-    let board = [
+    let board=[
 
         [1,2,3,4,5,6,7,8,9],
         [4,5,6,7,8,9,1,2,3],
@@ -524,13 +701,15 @@ function generateSolvedBoard(){
 
     ];
 
-    let nums = shuffle([1,2,3,4,5,6,7,8,9]);
+    let nums=
+        shuffle([1,2,3,4,5,6,7,8,9]);
 
     for(let r=0;r<9;r++){
 
         for(let c=0;c<9;c++){
 
-            board[r][c] = nums[board[r][c]-1];
+            board[r][c]=
+                nums[board[r][c]-1];
         }
 
     }
@@ -542,26 +721,55 @@ function generateSolvedBoard(){
 
 function newGame(){
 
-    solution = generateSolvedBoard();
+    notes={};
 
-    puzzle = JSON.parse(JSON.stringify(solution));
+    solution=generateSolvedBoard();
 
-    let remove = 50;
+    puzzle=
+        JSON.parse(JSON.stringify(solution));
 
-    while(remove > 0){
+    const difficulty =
+    document.getElementById(
+        "gameDifficulty"
+    ).value;
 
-        let r = Math.floor(Math.random()*9);
+    let remove = 40;
 
-        let c = Math.floor(Math.random()*9);
+    if(difficulty==="easy") remove=35;
+    if(difficulty==="medium") remove=45;
+    if(difficulty==="hard") remove=55;
+    if(difficulty==="expert") remove=65;
 
-        if(puzzle[r][c] !== 0){
+    currentDifficulty=difficulty;
 
-            puzzle[r][c] = 0;
+    while(remove>0){
+
+        let r=
+            Math.floor(Math.random()*9);
+
+        let c=
+            Math.floor(Math.random()*9);
+
+        if(puzzle[r][c]!==0){
+
+            puzzle[r][c]=0;
 
             remove--;
         }
 
     }
+
+    mistakes=0;
+
+    hints=3;
+
+    document.getElementById(
+        "mistakes"
+    ).innerText=0;
+
+    document.getElementById(
+        "hintCount"
+    ).innerText=3;
 
     createBoard();
 
@@ -575,48 +783,63 @@ function newGame(){
 
 function createBoard(){
 
-    const board = document.getElementById("board");
+    const board=
+        document.getElementById("board");
 
-    board.innerHTML = "";
+    board.innerHTML="";
 
-    for(let row=0; row<9; row++){
+    for(let row=0;row<9;row++){
 
-        for(let col=0; col<9; col++){
+        for(let col=0;col<9;col++){
 
-            const cell = document.createElement("div");
+            const cell=
+                document.createElement("div");
 
-            cell.className = "cell";
+            cell.className="cell";
 
             if(col===2 || col===5){
 
                 cell.style.borderRight =
-                    "4px solid #00897b";
+                "4px solid #00897b";
             }
 
             if(row===2 || row===5){
 
                 cell.style.borderBottom =
-                    "4px solid #00897b";
+                "4px solid #00897b";
             }
 
-            const input = document.createElement("input");
+            if(col===8){
 
-            input.id = `cell-${row}-${col}`;
+                cell.style.borderRight="none";
+            }
 
-            input.maxLength = 1;
+            if(row===8){
 
-            if(puzzle[row][col] !== 0){
+                cell.style.borderBottom="none";
+            }
 
-                input.value = puzzle[row][col];
+            const input=
+                document.createElement("input");
 
-                input.disabled = true;
+            input.id=
+                `cell-${row}-${col}`;
+
+            input.maxLength=1;
+
+            if(puzzle[row][col]!==0){
+
+                input.value=
+                    puzzle[row][col];
+
+                input.disabled=true;
 
                 input.classList.add("fixed");
             }
 
             input.addEventListener("click",()=>{
 
-                selectedCell = input;
+                selectedCell=input;
 
                 highlightSame(input.value);
 
@@ -624,47 +847,95 @@ function createBoard(){
 
             input.addEventListener("input",(e)=>{
 
-                const value = parseInt(e.target.value);
+                const value=
+                    parseInt(e.target.value);
 
-                if(!value || value<1 || value>9){
-
-                    e.target.value = "";
-
-                    return;
-                }
-
-                if(noteMode){
-
-                    addNote(row,col,value);
+                if(!value ||
+                    value<1 ||
+                    value>9){
 
                     e.target.value="";
 
                     return;
                 }
 
+                const key=`${row}-${col}`;
+
+                /* NOTE MODE */
+
+                if(noteMode){
+
+                    e.target.value="";
+
+                    if(!notes[key]){
+
+                        notes[key]=[];
+                    }
+
+                    if(notes[key].includes(value)){
+
+                        notes[key]=
+                        notes[key]
+                        .filter(v=>v!==value);
+
+                    }else{
+
+                        notes[key].push(value);
+
+                    }
+
+                    renderNotes(row,col);
+
+                    return;
+                }
+
+                /* NORMAL MODE */
+
                 if(value === solution[row][col]){
 
-                    puzzle[row][col] = value;
+                    puzzle[row][col]=value;
 
                     input.classList.remove("wrong");
 
-                    input.classList.add("correct");
+                    input.classList.add(
+                        "correct"
+                    );
 
-                    sendMove(row,col,value,true);
+                    input.disabled = true;
+
+                    input.classList.add("fixed");
+
+                    clearNotes(row,col);
 
                     updateNumberPanel();
+
+                    highlightSame(value.toString());
 
                     checkWin();
 
                 }else{
 
-                    input.classList.remove("correct");
-
-                    input.classList.add("wrong");
+                    input.classList.add(
+                        "wrong"
+                    );
 
                     mistakes++;
 
-                    if(mistakes >= 3){
+                    document.getElementById(
+                        "mistakes"
+                    ).innerText=mistakes;
+
+                    setTimeout(()=>{
+
+                        input.classList.remove(
+                            "wrong"
+                        );
+
+                    },500);
+
+                    e.target.value="";
+
+                    if(mistakes>=3){
 
                         alert("Bạn đã thua!");
                     }
@@ -675,11 +946,29 @@ function createBoard(){
 
             cell.appendChild(input);
 
-            const noteGrid = document.createElement("div");
+            /* NOTE GRID */
 
-            noteGrid.className = "note-grid";
+            const noteGrid=
+                document.createElement("div");
 
-            noteGrid.id = `notes-${row}-${col}`;
+            noteGrid.className="note-grid";
+
+            noteGrid.id=
+                `notes-${row}-${col}`;
+
+            for(let i=1;i<=9;i++){
+
+                const note=
+                    document.createElement("div");
+
+                note.className="note";
+
+                note.id=
+                    `note-${row}-${col}-${i}`;
+
+                noteGrid.appendChild(note);
+
+            }
 
             cell.appendChild(noteGrid);
 
@@ -691,18 +980,97 @@ function createBoard(){
 
 }
 
+/* NOTES */
+
+function renderNotes(row,col){
+
+    const key=`${row}-${col}`;
+
+    for(let i=1;i<=9;i++){
+
+        const note=
+        document.getElementById(
+            `note-${row}-${col}-${i}`
+        );
+
+        note.innerText="";
+
+    }
+
+    if(notes[key]){
+
+        notes[key].forEach(num=>{
+
+            const note=
+            document.getElementById(
+                `note-${row}-${col}-${num}`
+            );
+
+            note.innerText=num;
+
+        });
+
+    }
+
+}
+
+function clearNotes(row,col){
+
+    const key=`${row}-${col}`;
+
+    delete notes[key];
+
+    renderNotes(row,col);
+
+}
+
+/* NOTE MODE */
+
+function toggleNoteMode(){
+
+    noteMode=!noteMode;
+
+    const btn=
+    document.getElementById(
+        "noteButton"
+    );
+
+    if(noteMode){
+
+        btn.classList.add(
+            "note-active"
+        );
+
+    }else{
+
+        btn.classList.remove(
+            "note-active"
+        );
+
+    }
+
+}
+
 /* HIGHLIGHT */
 
 function highlightSame(value){
 
-    document.querySelectorAll(".cell input")
+    document
+    .querySelectorAll(".cell input")
     .forEach(input=>{
 
-        input.classList.remove("same");
+        input.classList.remove(
+            "same"
+        );
 
-        if(input.value === value && value !== ""){
+        if(
+            value !== "" &&
+            input.value === value
+        ){
 
-            input.classList.add("same");
+            input.classList.add(
+                "same"
+            );
         }
 
     });
@@ -713,7 +1081,7 @@ function highlightSame(value){
 
 function updateNumberPanel(){
 
-    const counts = {};
+    const counts={};
 
     for(let i=1;i<=9;i++){
 
@@ -724,9 +1092,9 @@ function updateNumberPanel(){
 
         for(let c=0;c<9;c++){
 
-            let val = puzzle[r][c];
+            let val=puzzle[r][c];
 
-            if(val !== 0){
+            if(val!==0){
 
                 counts[val]++;
             }
@@ -735,20 +1103,25 @@ function updateNumberPanel(){
 
     }
 
-    const panel =
-        document.getElementById("numberPanel");
+    const panel=
+        document.getElementById(
+            "numberPanel"
+        );
 
     panel.innerHTML="";
 
     for(let i=1;i<=9;i++){
 
-        const div = document.createElement("div");
+        const div=
+            document.createElement("div");
 
-        div.className = "number-btn";
+        div.className="number-btn";
 
-        div.innerHTML = `
+        div.innerHTML=`
 
-            <div class="number">${i}</div>
+            <div class="number">
+                ${i}
+            </div>
 
             <div class="remaining">
                 ${9-counts[i]}
@@ -758,83 +1131,23 @@ function updateNumberPanel(){
 
         div.onclick=()=>{
 
+            highlightSame(i.toString());
+
             if(selectedCell &&
                !selectedCell.disabled){
+
+                selectedCell.focus();
 
                 selectedCell.value=i;
 
                 selectedCell.dispatchEvent(
                     new Event("input")
                 );
-
             }
 
         };
 
         panel.appendChild(div);
-
-    }
-
-}
-
-/* NOTE */
-
-function toggleNoteMode(){
-
-    noteMode=!noteMode;
-
-    alert(
-        noteMode
-        ?
-        "Đã bật Pencil"
-        :
-        "Đã tắt Pencil"
-    );
-
-}
-
-function addNote(row,col,value){
-
-    const key=`${row}-${col}`;
-
-    if(!notes[key]){
-
-        notes[key]=[];
-    }
-
-    if(!notes[key].includes(value)){
-
-        notes[key].push(value);
-    }
-
-    renderNotes(row,col);
-
-}
-
-function renderNotes(row,col){
-
-    const key=`${row}-${col}`;
-
-    const box =
-        document.getElementById(
-            `notes-${row}-${col}`
-        );
-
-    box.innerHTML="";
-
-    for(let i=1;i<=9;i++){
-
-        const div=document.createElement("div");
-
-        div.className="note";
-
-        if(notes[key] &&
-           notes[key].includes(i)){
-
-            div.innerText=i;
-        }
-
-        box.appendChild(div);
 
     }
 
@@ -847,7 +1160,19 @@ function eraseCell(){
     if(selectedCell &&
        !selectedCell.disabled){
 
+        const parts=
+        selectedCell.id.split("-");
+
+        const row=
+        parseInt(parts[1]);
+
+        const col=
+        parseInt(parts[2]);
+
         selectedCell.value="";
+
+        clearNotes(row,col);
+
     }
 
 }
@@ -856,35 +1181,42 @@ function eraseCell(){
 
 function useHint(){
 
-    if(hints<=0 || !selectedCell){
+    if(hints<=0 ||
+       !selectedCell){
 
         return;
     }
 
-    const parts =
+    const parts=
         selectedCell.id.split("-");
 
-    const row =
+    const row=
         parseInt(parts[1]);
 
-    const col =
+    const col=
         parseInt(parts[2]);
 
-    selectedCell.value =
+    selectedCell.value=
         solution[row][col];
 
     selectedCell.classList.add(
         "correct"
     );
 
-    puzzle[row][col] =
+    selectedCell.disabled = true;
+
+    selectedCell.classList.add("fixed");
+
+    puzzle[row][col]=
         solution[row][col];
+
+    clearNotes(row,col);
 
     hints--;
 
     document.getElementById(
         "hintCount"
-    ).innerText = hints;
+    ).innerText=hints;
 
     updateNumberPanel();
 
@@ -907,149 +1239,163 @@ function checkWin(){
 
     }
 
-    alert("Bạn chiến thắng!");
+    clearInterval(timerInterval);
+
+    const playerName =
+    document.getElementById(
+        "playerName"
+    ).value || "Unknown";
+
+    saveLeaderboard(playerName);
+
+    alert(
+        "Bạn chiến thắng!"
+    );
 
 }
 
-/* ONLINE */
+/* SAVE LEADERBOARD */
 
-function connectOnline(){
+function saveLeaderboard(player){
 
-    const socket =
-        new SockJS('/ws');
+    let leaderboard =
+    JSON.parse(
+        localStorage.getItem(
+            "sudokuLeaderboard"
+        )
+    ) || [];
 
-    stompClient =
-        Stomp.over(socket) ;
+    leaderboard.push({
 
-    stompClient.connect({},()=>{
+        name:player,
 
-       document.getElementById(
-            "onlineStatus"
-        ).innerText =
-            "Đã kết nối server";
+        time:seconds,
 
-        stompClient.subscribe(
-            '/topic/game',
-            function(message){
+        difficulty:currentDifficulty
 
-                const data =
-                    JSON.parse(message.body);
+    });
 
-                updateOnlineMove(data);
+    leaderboard.sort(
+        (a,b)=>a.time-b.time
+    );
 
-            }
-        );
+    localStorage.setItem(
 
-        stompClient.subscribe(
-            "/topic/room",
-            function(message){
+        "sudokuLeaderboard",
 
-                const data =
-                    JSON.parse(message.body);
+        JSON.stringify(leaderboard)
 
-                currentRoom =
-                    data.roomId;
+    );
 
-                document.getElementById(
-                    "roomInput"
-                ).value =
-                    currentRoom;
+    loadLeaderboard();
 
-                alert(
-                    "Đã tạo phòng: "
-                    + currentRoom
-                );
+}
 
-            }
-        );
+/* LOAD LEADERBOARD */
+
+function loadLeaderboard(){
+
+    let leaderboard =
+    JSON.parse(
+        localStorage.getItem(
+            "sudokuLeaderboard"
+        )
+    ) || [];
+
+    const body =
+    document.getElementById(
+        "leaderboardBody"
+    );
+
+    body.innerHTML="";
+
+    leaderboard
+    .slice(0,10)
+    .forEach((player,index)=>{
+
+        body.innerHTML += `
+
+        <tr>
+
+            <td>
+                ${index+1}
+            </td>
+
+            <td>
+                ${player.name}
+            </td>
+
+            <td>
+                ${player.time}s
+            </td>
+
+            <td>
+                ${player.difficulty}
+            </td>
+
+        </tr>
+
+        `;
 
     });
 
 }
 
-function sendMove(
-    row,col,value,valid
-){
-
-    if(!stompClient){
-
-        return;
-    }
-
-    stompClient.send(
-        "/app/move",
-        {},
-        JSON.stringify({
-
-            row:row,
-            col:col,
-            value:value,
-            valid:valid,
-            room:currentRoom
-
-        })
-    );
-
-}
-
-function updateOnlineMove(data){
-
-    if(data.room !== currentRoom){
-
-        return;
-    }
-
-    const cell =
-        document.getElementById(
-            `cell-${data.row}-${data.col}`
-        );
-
-    if(cell &&
-       !cell.disabled){
-
-        cell.value = data.value;
-    }
-
-}
-
-/* ROOM */
+/* ONLINE */
 
 function createRoom(){
 
-    stompClient.send(
-        "/app/create-room",
-        {},
-        JSON.stringify({})
-    );
+    currentPlayer=
+    document.getElementById(
+        'playerName'
+    ).value;
+
+    if(currentPlayer===''){
+
+        alert('Nhập tên');
+
+        return;
+    }
+
+    currentRoom=
+    Math.random()
+    .toString(36)
+    .substring(2,8);
+
+    document.getElementById(
+        'roomCode'
+    ).value=currentRoom;
+
+    connectSocket();
+
+    newGame();
 
 }
 
-function findMatch(){
+function joinRoom(){
 
-    const roomId =
-        document.getElementById(
-            "roomInput"
-        ).value;
+    const room =
+    document.getElementById(
+        "roomCode"
+    ).value;
 
-    if(roomId===""){
+    if(room===""){
 
         alert("Nhập mã phòng");
 
         return;
     }
 
-    currentRoom = roomId;
-
-    alert(
-        "Đã tham gia phòng: "
-        + roomId
-    );
+    document.getElementById(
+        "onlineStatus"
+    ).innerText =
+    "🟢 Đã tham gia phòng: " + room;
 
 }
 
 /* START */
 
-connectOnline();
+loadLeaderboard();
 
 newGame();
 
